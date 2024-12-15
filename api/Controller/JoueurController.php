@@ -14,26 +14,22 @@ class JoueurController extends Controller {
     }
 
     protected function processGetRequest(HttpRequest $request) {
-
         $stat = $request->getParam('stat');
-        if ($stat=='listall'){
+        if ($stat == 'listall') {
             return $this->joueur->listall();
         }
-        $stat = $request->getParam('stat');
-        if ($stat=='list'){
+        if ($stat == 'list') {
             return $this->joueur->list();
         }
-        $stat = $request->getParam('stat');
-        if ($stat=='listimpair'){
+        if ($stat == 'listimpair') {
             return $this->joueur->listimpair();
         }
-        $stat = $request->getParam('stat');
-        if ($stat=='listpair'){
+        if ($stat == 'listpair') {
             return $this->joueur->listpair();
         }
 
         $id = $request->getId("id_joueur");
-        if ($id){
+        if ($id) {
             // URI is .../Joueur/{id_joueur}
             $j = $this->joueur->find($id);
             return $j == null ? false : $j;
@@ -41,15 +37,15 @@ class JoueurController extends Controller {
             return $this->joueur->findAll();
         }
     }
-    
 
     protected function processPostRequest(HttpRequest $request) {
-        $body = file_get_contents('php://input');
-$data = json_decode($body, true);
+        
+        $data = json_decode(file_get_contents("php://input"), true);
+        
 
-if ($data === null) {
-    throw new RuntimeException('Le corps de la requête est vide ou contient des données JSON invalides.');
-}
+        if ($data === null) {
+            throw new RuntimeException('Le corps de la requête est vide ou contient des données JSON invalides.');
+        }
         $id_perso = $data['id_perso'] ?? null;
         $nom = $data['nom'] ?? null;
         $ville = $data['ville'] ?? null;
@@ -63,22 +59,45 @@ if ($data === null) {
         } else {
             return false;
         }
-        
     }
-
 
     protected function processDeleteRequest(HttpRequest $request) {
         return $this->joueur->deleteAll();
     }
 
-    
-protected function processDeleteByIdRequest(HttpRequest $request) {
-    $id = $request->getId("ville");
-    if ($id) {
-        return $this->joueur->deleteByville($id);
-    } else {
-        return false;
+    protected function processDeleteByIdRequest(HttpRequest $request) {
+        $id = $request->getId("ville");
+        if ($id) {
+            return $this->joueur->deleteByville($id);
+        } else {
+            return false;
+        }
     }
-}
+
+    public function saveVille($request) {
+        if ($request->getMethod() == "POST") {
+            $data = $request->getBody(); // Récupérer les données de la requête
+            if (isset($data['ville'])) {
+                $_SESSION['ville'] = $data['ville']; // Sauvegarder dans la session
+                return json_encode(['success' => true, 'message' => 'Ville sauvegardée.']);
+            }
+        }
+        return json_encode(['success' => false, 'message' => 'Ville non spécifiée.']);
+    }
+
+    public function getVille() {
+        if (isset($_SESSION['ville'])) {
+            return json_encode(['success' => true, 'ville' => $_SESSION['ville']]);
+        }
+        return json_encode(['success' => false, 'message' => 'Aucune ville sauvegardée.']);
+    }
+
+    public function deleteVille() {
+        if (isset($_SESSION['ville'])) {
+            unset($_SESSION['ville']); // Supprime la ville de la session
+            return json_encode(['success' => true, 'message' => 'Ville supprimée.']);
+        }
+        return json_encode(['success' => false, 'message' => 'Aucune ville à supprimer.']);
+    }
 }
 ?>

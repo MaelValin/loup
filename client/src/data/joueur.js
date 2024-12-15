@@ -57,6 +57,38 @@ Joueur.listpair = async function(){
 }
 
 
+// Exemple de méthode saveSession
+ Joueur.saveSession=  async function (villes) {
+    const data = {
+        ville: villes
+    }; // Vous envoyez la ville en tant que données JSON
+    let datajson= JSON.stringify(data);
+    let response = await postRequest('saveville', datajson);  // 'saveville' correspond à la route de l'API
+    if (response) {
+        console.log('Ville enregistrée', response);
+    } else {
+        console.error('Erreur lors de l\'enregistrement de la ville');
+    }
+}
+
+
+Joueur.getVille = async function() {
+    let data = await getRequest('getville');
+    if (data) {
+        if (data.success) {
+            console.log('Ville sauvegardée :', data.ville);
+        } else {
+            console.log(data.message);
+        }
+    }
+    return data;
+}
+
+Joueur.deleteVille = async function() {
+    let response = await deleteRequest('deleteville');
+    console.log(response);
+    return response;
+}
 
 
 export {Joueur};

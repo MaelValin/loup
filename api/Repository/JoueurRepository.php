@@ -109,8 +109,11 @@ where perso.tour=0 order by perso.ordre asc");
     }
 
 
+    public function getbody() {
+        return file_get_contents('php://input');
+    }
 
-
+    
 
 
 
@@ -171,6 +174,10 @@ where perso.tour=0 order by perso.ordre asc");
             throw new RuntimeException('Erreur lors de la suppression : ' . $e->getMessage());
         }
     }
+
+
+
+    
 
     public function update($joueur){
         // Not implemented ! TODO when needed !

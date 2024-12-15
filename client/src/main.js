@@ -86,13 +86,22 @@ V.rendernuit = async function(nuitCounter) {
     }
     const terminerButton = document.getElementById('terminer');
     if (terminerButton) {
-        terminerButton.addEventListener('click', function() {
+        terminerButton.addEventListener('click', async function() {
               
             
             Joueur.deleteAll();
+
+            Joueur.deleteVille();
+
             V.rendercommencer();
             V.renderoption();
             V.addjoueur();
+
+
+
+
+
+
         });
     }
 };
@@ -175,7 +184,7 @@ V.renderoption = async function () {
         const newInput = document.createElement('input');
         newInput.type = 'text';
         newInput.placeholder = 'Nom du joueur';
-        newInput.className = 'p-2 border border-gray-300 rounded';
+        newInput.className = 'p-2 border border-gray-300 rounded w-full md:w-fit';
 
         const newSelect = document.createElement('select');
         newSelect.className = 'p-2 border border-gray-300 rounded';
@@ -189,7 +198,7 @@ V.renderoption = async function () {
         });
 
         const newDiv = document.createElement('div');
-        newDiv.className = 'flex gap-4';
+        newDiv.className = 'flex gap-4 md:flex-row flex-col items-center';
         newDiv.id = 'form-joueur';
         newDiv.appendChild(newInput);
         newDiv.appendChild(newSelect);
@@ -230,6 +239,13 @@ V.initSearch();
 
 V.addjoueur = function() {
     document.getElementById('add-joueur').addEventListener('click', async function() {
+
+        const villeInputvalue = document.getElementById('villeinput').value;
+        Joueur.saveSession(villeInputvalue);
+
+
+
+
         console.log('Add joueur clicked');
         const villeInput = document.getElementById('villeinput');
         const dynamicForm = document.getElementById('dynamic-form');
@@ -249,6 +265,10 @@ V.addjoueur = function() {
         // Une fois les joueurs ajoutés, re-rendre la liste et réinitialiser la nuit
         await V.renderList(1);
         await V.rendernuit(1);
+
+
+
+
     });
 };
 
