@@ -214,6 +214,14 @@ V.renderoption = async function () {
     });
 }
 
+let searchForm = document.querySelector('form');
+if (searchForm) {
+    searchForm.addEventListener('submit', event => {
+        event.preventDefault();  // Empêche le rechargement de la page
+    });
+}
+
+
 V.initSearch = function() {
     if (window.location.pathname.endsWith('index.html')) {
         let searchInput = document.querySelector('input[type="text"]');
@@ -222,6 +230,7 @@ V.initSearch = function() {
 };
 
 V.handleSearch = async function(event) {
+    event.preventDefault();  // Prevent the default form submission behavior
     let query = event.target.value.toLowerCase();
     let person = await Perso.fetchAll();
     V.container.innerHTML = '';
