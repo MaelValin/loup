@@ -63,7 +63,7 @@ INNER JOIN perso ON joueur.id_perso = perso.id_perso order by perso.ordre asc");
     }
 
 
-    public function list(){
+    public function list($ville){
         $requete = $this->cnx->prepare("SELECT joueur.nom AS joueur_nom, 
        joueur.ville, 
        perso.nom AS perso_nom, 
@@ -72,7 +72,7 @@ INNER JOIN perso ON joueur.id_perso = perso.id_perso order by perso.ordre asc");
        perso.ordre
 FROM joueur
 INNER JOIN perso ON joueur.id_perso = perso.id_perso
-where perso.tour!=-1 order by perso.ordre asc"); 
+where perso.tour!=-1 and joueur.ville='$ville' order by perso.ordre asc"); 
         $requete->execute();
         $answer = $requete->fetchAll(PDO::FETCH_OBJ);
         return $answer;
@@ -87,7 +87,7 @@ where perso.tour!=-1 order by perso.ordre asc");
        perso.ordre
 FROM joueur
 INNER JOIN perso ON joueur.id_perso = perso.id_perso
-where perso.tour=0 or perso.tour=2 order by perso.ordre asc"); 
+where perso.tour=0 or perso.tour=2 and joueur.ville='$ville' order by perso.ordre asc"); 
         $requete->execute();
         $answer = $requete->fetchAll(PDO::FETCH_OBJ);
         return $answer;
@@ -102,31 +102,11 @@ where perso.tour=0 or perso.tour=2 order by perso.ordre asc");
        perso.ordre
 FROM joueur
 INNER JOIN perso ON joueur.id_perso = perso.id_perso
-where perso.tour=0 order by perso.ordre asc"); 
+where perso.tour=0 and joueur.ville='$ville' order by perso.ordre asc"); 
         $requete->execute();
         $answer = $requete->fetchAll(PDO::FETCH_OBJ);
         return $answer;
     }
-
-
-    public function getbody() {
-        return file_get_contents('php://input');
-    }
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

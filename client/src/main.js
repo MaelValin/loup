@@ -65,12 +65,12 @@ V.rendercommencer = function() {
 
 let nuitCounter = 1;  // Initialiser le compteur global pour la nuit
 
-V.rendernuit = async function(nuitCounter) {
+V.rendernuit = async function(nuitCounter, ville) {
     // Mettre à jour le contenu de la partie haute
     V.container_partihaut.innerHTML = Nuitview.render(nuitCounter);
 
     // Rendre la liste des zones
-    V.renderzoneliste(nuitCounter);
+    V.renderzoneliste(nuitCounter,ville);
 
     // Rendre les éléments du passé de la nuit
     V.renderPastnuit();
@@ -81,7 +81,8 @@ V.rendernuit = async function(nuitCounter) {
     if (pastNuitButton) {
         pastNuitButton.addEventListener('click', function() {
             nuitCounter++;  // Incrémenter le compteur à chaque clic
-            V.rendernuit(nuitCounter);  // Appeler rendernuit avec le compteur mis à jour
+            V.rendernuit(nuitCounter,ville);  // Appeler rendernuit avec le compteur mis à jour
+            console.log(ville);
         });
     }
     const terminerButton = document.getElementById('terminer');
@@ -91,7 +92,7 @@ V.rendernuit = async function(nuitCounter) {
             
             Joueur.deleteAll();
 
-            Joueur.deleteVille();
+            
 
             V.rendercommencer();
             V.renderoption();
@@ -106,13 +107,13 @@ V.rendernuit = async function(nuitCounter) {
     }
 };
 
-V.renderzoneliste = function(nuitCounter) {
+V.renderzoneliste = function(nuitCounter,ville) {
     let zonelisteElement = document.createElement('div');
     zonelisteElement.innerHTML = Zonelisteview.render();
     V.container_partihaut.appendChild(zonelisteElement);
-    
+    console.log(ville);
     if (document.querySelector('#liste')) {
-        V.renderList(nuitCounter);
+        V.renderList(nuitCounter, ville);
     }
 }
 
@@ -129,14 +130,14 @@ V.renderterminer= function() {
 }
 
 
-V.renderList = async function(nuitCounter) {
+V.renderList = async function(nuitCounter,ville) {
 
     let listdata = document.querySelector('#liste');
     if(document.querySelector('#liste')){
      // Nettoyer la liste
-     let datajoueur= await Joueur.list();
-     let datajoueur1= await Joueur.listimpair();
-        let datajoueur2= await Joueur.listpair();
+     let datajoueur= await Joueur.list(ville);
+     let datajoueur1= await Joueur.listimpair(ville);
+        let datajoueur2= await Joueur.listpair(ville);
     console.log(datajoueur);
     console.log(datajoueur1);
     console.log(datajoueur2);
@@ -240,13 +241,8 @@ V.initSearch();
 V.addjoueur = function() {
     document.getElementById('add-joueur').addEventListener('click', async function() {
 
-        const villeInputvalue = document.getElementById('villeinput').value;
-        Joueur.saveSession(villeInputvalue);
-
-
-
-
-        console.log('Add joueur clicked');
+        let villeInputvalue = document.getElementById('villeinput').value;
+       
         const villeInput = document.getElementById('villeinput');
         const dynamicForm = document.getElementById('dynamic-form');
 
@@ -262,9 +258,11 @@ V.addjoueur = function() {
         // Attendre que toutes les promesses soient terminées
         await Promise.all(promises);
 
+        
+
         // Une fois les joueurs ajoutés, re-rendre la liste et réinitialiser la nuit
-        await V.renderList(1);
-        await V.rendernuit(1);
+        await V.renderList(1,villeInputvalue);
+        await V.rendernuit(1,villeInputvalue);
 
 
 

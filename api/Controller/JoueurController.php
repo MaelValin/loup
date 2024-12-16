@@ -14,18 +14,20 @@ class JoueurController extends Controller {
     }
 
     protected function processGetRequest(HttpRequest $request) {
+        
         $stat = $request->getParam('stat');
         if ($stat == 'listall') {
             return $this->joueur->listall();
         }
-        if ($stat == 'list') {
-            return $this->joueur->list();
+        $ville = $request->getParam('ville');
+        if ($stat == 'list' && $ville) {
+            return $this->joueur->list($ville);
         }
-        if ($stat == 'listimpair') {
-            return $this->joueur->listimpair();
+        if ($stat == 'listimpair' && $ville) {
+            return $this->joueur->listimpair($ville);
         }
-        if ($stat == 'listpair') {
-            return $this->joueur->listpair();
+        if ($stat == 'listpair' && $ville) {
+            return $this->joueur->listpair($ville);
         }
 
         $id = $request->getId("id_joueur");
@@ -74,30 +76,6 @@ class JoueurController extends Controller {
         }
     }
 
-    public function saveVille($request) {
-        if ($request->getMethod() == "POST") {
-            $data = $request->getBody(); // Récupérer les données de la requête
-            if (isset($data['ville'])) {
-                $_SESSION['ville'] = $data['ville']; // Sauvegarder dans la session
-                return json_encode(['success' => true, 'message' => 'Ville sauvegardée.']);
-            }
-        }
-        return json_encode(['success' => false, 'message' => 'Ville non spécifiée.']);
-    }
-
-    public function getVille() {
-        if (isset($_SESSION['ville'])) {
-            return json_encode(['success' => true, 'ville' => $_SESSION['ville']]);
-        }
-        return json_encode(['success' => false, 'message' => 'Aucune ville sauvegardée.']);
-    }
-
-    public function deleteVille() {
-        if (isset($_SESSION['ville'])) {
-            unset($_SESSION['ville']); // Supprime la ville de la session
-            return json_encode(['success' => true, 'message' => 'Ville supprimée.']);
-        }
-        return json_encode(['success' => false, 'message' => 'Aucune ville à supprimer.']);
-    }
+   
 }
 ?>

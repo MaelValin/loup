@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 require_once "Class/HttpRequest.php";
 require_once "Controller/PersoController.php";
 require_once "Controller/JoueurController.php";
@@ -30,10 +30,7 @@ require_once "Controller/JoueurController.php";
 $router = [
     "perso" => new PersoController(),
     "joueur" => new JoueurController(),
-    "saveville" => new JoueurController(),
-    "getville" => new JoueurController(),
-    "deleteville" => new JoueurController(),
-
+    
     
 ];
 
